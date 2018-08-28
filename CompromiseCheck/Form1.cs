@@ -98,23 +98,27 @@ namespace CompromiseCheck
                 }
             }
 
-            File.Delete(Environment.CurrentDirectory + @"\adExport.txt");
+           File.Delete(Environment.CurrentDirectory + @"\adExport.txt");
         }
 
         private void addRecord(string record)
         {
+            ADObjects obj = new ADObjects();
             foreach (string line in record.Split(new[] {  Environment.NewLine }, StringSplitOptions.None))
             {
-                ADObjects obj = new ADObjects();
+                
                 if (line.Contains(@"SamAccountName: "))
                 {
                     obj.SAM = line.Split(':')[1].TrimStart();
+                    //MessageBox.Show(obj.SAM);
+                    
                 }else
                 {
                     if (line.Contains(@"NTHash: "))
                     {
-                        string NTLM = line.Split(':')[1].TrimStart();
+                        string NTLM = line.Split(':')[1].TrimStart().ToUpper();
                         obj.NTLM = NTLM;
+                        //MessageBox.Show(obj.NTLM);
                         if (!(allNTLM.Contains(NTLM)))
                         {
                             if (allNTLM != "")
@@ -122,10 +126,14 @@ namespace CompromiseCheck
                                 allNTLM += Environment.NewLine;
                             }
                             allNTLM += NTLM;
+                            //MessageBox.Show(allNTLM);
                         }
                     }
                 }
+                
+                
             }
+            ADO.Add(obj);
         }
 
         private void checkCompromised()
@@ -136,6 +144,7 @@ namespace CompromiseCheck
             {
                 string hash = line.Split(':')[0];
                 string count = line.Split(':')[1];
+                
                 if (allNTLM.Contains(hash))
                 {
                     if (compromisedNTLM != "")
@@ -144,6 +153,7 @@ namespace CompromiseCheck
                     }
                     compromisedNTLM += hash;
                     allNTLM.Replace(hash, "");
+                    
                 }
             }
         }
@@ -152,6 +162,10 @@ namespace CompromiseCheck
         {
             foreach (ADObjects obj in ADO)
             {
+                if (obj.SAM == "BSemrau")
+                {
+                    MessageBox.Show(obj.SAM);
+                }
                 if (compromisedNTLM.Contains(obj.NTLM))
                 {
                     if (textBox4.Text != "")
