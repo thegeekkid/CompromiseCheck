@@ -166,9 +166,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(327, 60);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(316, 13);
+            this.label6.Size = new System.Drawing.Size(164, 13);
             this.label6.TabIndex = 12;
-            this.label6.Text = "Compromised SAMAccountName | Number of times seen by HIBP";
+            this.label6.Text = "Compromised SAMAccountName";
             // 
             // textBox4
             // 
