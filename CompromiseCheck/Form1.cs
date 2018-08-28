@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.IO;
 
 namespace CompromiseCheck
 {
@@ -37,6 +38,30 @@ namespace CompromiseCheck
         private void button2_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Please note, this process may take anywhere from a few minutes to a few days depending on a number of factors.  During this time, the program will appear to be frozen.");
+            InstallDSinternals();
+            ReplicateAD();
+        }
+        private void InstallDSinternals()
+        {
+            if (!(Directory.Exists(@"C:\Program Files\WindowsPowerShell\Modules\DSInternals")))
+            {
+                try
+                {
+                    new Microsoft.VisualBasic.Devices.Computer().FileSystem.CopyDirectory(Environment.CurrentDirectory + @"\DSInternals", @"C:\Program Files\WindowsPowerShell\Modules\DSInternals");
+                }catch
+                {
+                    MessageBox.Show(@"Error installing DSInternals modules.  Please install to C:\Program Files\WindowsPowerShell\Modules");
+                    Application.Exit();
+                }
+            }
+        }
+        private void ReplicateAD()
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
+            proc.StartInfo.Arguments = @"set-executionpolicy remotesigned; Import-Module DSInternals; Get-ADReplAccount -All -NamingContext '" + textBox1.Text + @"' -Server " + textBox2.Text + @" >" + Environment.CurrentDirectory + @"\adExport.txt";
+            proc.Start();
+            proc.WaitForExit();
         }
     }
 }
