@@ -72,7 +72,7 @@ namespace CompromiseCheck
             }
             Process proc = new Process();
             proc.StartInfo.FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
-            proc.StartInfo.Arguments = @"set-executionpolicy remotesigned; Import-Module DSInternals; Get-ADReplAccount -All -NamingContext '" + textBox1.Text + @"' -Server " + textBox2.Text + @" >" + Environment.CurrentDirectory + @"\adExport.txt";
+            proc.StartInfo.Arguments = @"set-executionpolicy remotesigned; Import-Module DSInternals; Get-ADReplAccount -All -NamingContext '" + textBox1.Text + @"' -Server " + textBox2.Text + @" >""" + Environment.CurrentDirectory + @"\adExport.txt""";
             proc.Start();
             proc.WaitForExit();
         }
@@ -162,10 +162,6 @@ namespace CompromiseCheck
         {
             foreach (ADObjects obj in ADO)
             {
-                if (obj.SAM == "BSemrau")
-                {
-                    MessageBox.Show(obj.SAM);
-                }
                 if (compromisedNTLM.Contains(obj.NTLM))
                 {
                     if (textBox4.Text != "")
