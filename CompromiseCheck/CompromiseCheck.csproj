@@ -90,4 +90,7 @@
     <Content Include="the_geek_kid_logo_O4y_icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /n "Brian Semrau" /t http://timestamp.digicert.com "$(TargetPath)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
