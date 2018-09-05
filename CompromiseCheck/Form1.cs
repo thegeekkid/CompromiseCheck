@@ -65,16 +65,21 @@ namespace CompromiseCheck
             {
                 File.Delete(Environment.CurrentDirectory + @"\adExport.txt");
             }
+            if (!(Directory.Exists(@"C:\ProgramData\SemrauSecurity\CompromiseCheck")))
+            {
+                Directory.CreateDirectory(@"C:\ProgramData\SemrauSecurity\CompromiseCheck");
+            }
             Process proc = new Process();
             proc.StartInfo.FileName = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
-            proc.StartInfo.Arguments = @"set-executionpolicy remotesigned; Import-Module DSInternals; Get-ADReplAccount -All -NamingContext '" + textBox1.Text + @"' -Server " + textBox2.Text + @" >""" + Environment.CurrentDirectory + @"\adExport.txt""";
+            proc.StartInfo.Arguments = @"set-executionpolicy remotesigned; Import-Module DSInternals; Get-ADReplAccount -All -NamingContext '" + textBox1.Text + @"' -Server " + textBox2.Text + @" >C:\ProgramData\SemrauSecurity\CompromiseCheck\adExport.txt";
+            proc.StartInfo.Verb = "runas";
             proc.Start();
             proc.WaitForExit();
         }
 
         private void ReadAD()
         {
-            string objects = File.ReadAllText(Environment.CurrentDirectory + @"\adExport.txt");
+            string objects = File.ReadAllText(@"C:\ProgramData\SemrauSecurity\CompromiseCheck\adExport.txt");
 
             foreach (string record in objects.Split(new string[] { "DistinguishedName: " }, StringSplitOptions.None))
             {
@@ -93,7 +98,7 @@ namespace CompromiseCheck
                 }
             }
 
-           File.Delete(Environment.CurrentDirectory + @"\adExport.txt");
+           File.Delete(@"C:\ProgramData\SemrauSecurity\CompromiseCheck\adExport.txt");
         }
 
         private void addRecord(string record)
